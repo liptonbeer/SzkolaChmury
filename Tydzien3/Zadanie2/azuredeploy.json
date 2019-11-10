@@ -62,6 +62,36 @@
       "properties": {}
     },
     {
+      "name": "[variables('networkSecurityGroupName1')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nsg.json"
+          },
+          "parameters": {
+              "location":{"value": "[variables('location')]"},
+              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName1')]"}
+          }
+      }
+    },
+    {
+      "name": "[variables('networkSecurityGroupName2')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nsg.json"
+          },
+          "parameters": {
+              "location":{"value": "[variables('location')]"},
+              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName2')]"}
+          }
+      }
+    },
+    {
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "apiVersion": "2019-08-01",
@@ -77,31 +107,22 @@
           {
             "name": "[variables('subnet1Name')]",
             "properties": {
-              "addressPrefix": "10.0.0.0/24"
+              "addressPrefix": "10.0.0.0/24",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName1'))]"
+              }
             }
           },
           {
             "name": "[variables('subnet2Name')]",
             "properties": {
-              "addressPrefix": "10.0.1.0/24"
+              "addressPrefix": "10.0.1.0/24",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName2'))]"
+              }
             }
           }
         ]
-      }
-    },
-    {
-      "name": "[variables('networkSecurityGroupName1')]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "properties": {
-          "mode": "Incremental",
-          "templateLink": {
-              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nsg.json"
-          },
-          "parameters": {
-              "location":{"value": "[variables('location')]"},
-              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName1')]"}
-          }
       }
     },
     {
@@ -150,21 +171,6 @@
               "nicName":{"value": "[variables('nic1')]"},
               "adminUsername":{"value": "[parameters('adminUsername')]"},
               "adminPasswordOrKey":{"value": "[parameters('adminPassword')]"}
-          }
-      }
-    },
-    {
-      "name": "[variables('networkSecurityGroupName2')]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "properties": {
-          "mode": "Incremental",
-          "templateLink": {
-              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nsg.json"
-          },
-          "parameters": {
-              "location":{"value": "[variables('location')]"},
-              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName2')]"}
           }
       }
     },
