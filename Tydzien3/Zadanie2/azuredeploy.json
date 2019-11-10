@@ -102,7 +102,7 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri":"https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/tutorial-linked-templates/linkedStorageAccount.json"
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nsg.json"
           },
           "parameters": {
               "location":{"value": "[parameters('location')]"},
@@ -117,7 +117,7 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri":"https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/tutorial-linked-templates/linkedStorageAccount.json"
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nic.json"
           },
           "parameters": {
               "location":{"value": "[parameters('location')]"},
@@ -135,7 +135,7 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri":"https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/tutorial-linked-templates/linkedStorageAccount.json"
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/virtualMachine.json"
           },
           "parameters": {
               "location":{"value": "[parameters('location')]"},
@@ -161,7 +161,7 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri":"https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/tutorial-linked-templates/linkedStorageAccount.json"
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nsg.json"
           },
           "parameters": {
               "location":{"value": "[parameters('location')]"},
@@ -176,7 +176,7 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri":"https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/tutorial-linked-templates/linkedStorageAccount.json"
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nic.json"
           },
           "parameters": {
               "location":{"value": "[parameters('location')]"},
@@ -194,7 +194,7 @@
       "properties": {
           "mode": "Incremental",
           "templateLink": {
-              "uri":"https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/tutorial-linked-templates/linkedStorageAccount.json"
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/virtualMachine.json"
           },
           "parameters": {
               "location":{"value": "[parameters('location')]"},
