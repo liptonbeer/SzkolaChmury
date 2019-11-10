@@ -96,11 +96,12 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "OSdisk01",
+            "name": "[concat('OSdisk-', parameters('virtualMachineName'))]",
             "createOption": "FromImage"
           },
           "dataDisks": [
             {
+              "name": "[concat('Datadisk-',parameters('virtualMachineName'))]",
               "diskSizeGB": 1023,
               "lun": 0,
               "createOption": "Empty"
