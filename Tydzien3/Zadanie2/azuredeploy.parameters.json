@@ -7,6 +7,12 @@
   },
     "adminPassword": {
       "value": "SzkolaChmury#3"
-    }
+    },
+  "virtualMachineSize": {
+    "value": "Standard_DS1_v2"
+  },
+  "storageAccountType": {
+    "value": "Standard_LRS"
   }
+}
 }

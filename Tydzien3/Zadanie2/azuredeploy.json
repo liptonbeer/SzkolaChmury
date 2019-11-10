@@ -15,7 +15,7 @@
         "description": "Default Admin username"
       }
     },
-    "adminPasswordOrKey": {
+    "adminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
@@ -31,16 +31,10 @@
         "Standard_LRS",
         "Premium_LRS"
       ]
-    },
-    "location": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Location for all resources."
-      }
     }
   },
   "variables": {
+    "location": "[resourceGroup().location]",
     "virtualMachineName1": "t3-ubuntu-vm01",
     "virtualMachineName2": "t3-ubuntu-vm02",
     "nic1": "t3-ubuntu-vm01-nic01",
@@ -48,7 +42,7 @@
     "virtualNetworkName": "t3-vnet",
     "subnet1Name": "subnet1",
     "subnet2Name": "subnet2",
-    "storageAccountName": "[concat('diags',uniqueString(resourceGroup().id))]",
+    "storageAccountName": "t3data01",
     "networkSecurityGroupName1": "t3-subnet1-nsg",
     "networkSecurityGroupName2": "t3-subnet2-nsg",
     "imagePublisher": "Canonical",
@@ -60,7 +54,7 @@
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('storageAccountName')]",
       "apiVersion": "2019-04-01",
-      "location": "[parameters('location')]",
+      "location": "[variables('location')]",
       "sku": {
         "name": "[parameters('storageAccountType')]"
       },
@@ -71,7 +65,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "apiVersion": "2019-08-01",
-      "location": "[parameters('location')]",
+      "location": "[variables('location')]",
       "comments": "This will build a Virtual Network.",
       "properties": {
         "addressSpace": {
@@ -105,7 +99,7 @@
               "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nsg.json"
           },
           "parameters": {
-              "location":{"value": "[parameters('location')]"},
+              "location":{"value": "[variables('location')]"},
               "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName1')]"}
           }
       }
@@ -120,7 +114,7 @@
               "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nic.json"
           },
           "parameters": {
-              "location":{"value": "[parameters('location')]"},
+              "location":{"value": "[variables('location')]"},
               "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
               "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName1')]"},
               "subnetName":{"value": "[variables('subnet1Name')]"},
@@ -138,19 +132,16 @@
               "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/virtualMachine.json"
           },
           "parameters": {
-              "location":{"value": "[parameters('location')]"},
+              "location":{"value": "[variables('location')]"},
               "storageAccountName":{"value": "[variables('storageAccountName')]"},
-              "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
-              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName1')]"},
               "virtualMachineName":{"value": "[variables('virtualMachineName1')]"},
               "virtualMachineSize":{"value": "[parameters('virtualMachineSize')]"},
               "ubuntuOSVersion":{"value": "[variables('ubuntuOSVersion')]"},
               "imagePublisher":{"value": "[variables('imagePublisher')]"},
               "imageOffer":{"value": "[variables('imageOffer')]"},
-              "subnetName":{"value": "[variables('subnet1Name')]"},
               "nicName":{"value": "[variables('nic1')]"},
               "adminUsername":{"value": "[parameters('adminUsername')]"},
-              "adminPasswordOrKey":{"value": "[parameters('adminPasswordOrKey')]"}
+              "adminPasswordOrKey":{"value": "[parameters('adminPassword')]"}
           }
       }
     },
@@ -164,7 +155,7 @@
               "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nsg.json"
           },
           "parameters": {
-              "location":{"value": "[parameters('location')]"},
+              "location":{"value": "[variables('location')]"},
               "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName2')]"}
           }
       }
@@ -179,11 +170,11 @@
               "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nic.json"
           },
           "parameters": {
-              "location":{"value": "[parameters('location')]"},
+              "location":{"value": "[variables('location')]"},
               "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
               "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName2')]"},
-              "subnetName":{"value": "[variables('subnet1Name')]"},
-              "nicName":{"value": "[variables('nic1')]"}
+              "subnetName":{"value": "[variables('subnet2Name')]"},
+              "nicName":{"value": "[variables('nic2')]"}
           }
       }
     },
@@ -197,19 +188,16 @@
               "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/virtualMachine.json"
           },
           "parameters": {
-              "location":{"value": "[parameters('location')]"},
+              "location":{"value": "[variables('location')]"},
               "storageAccountName":{"value": "[variables('storageAccountName')]"},
-              "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
-              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName2')]"},
               "virtualMachineName":{"value": "[variables('virtualMachineName2')]"},
               "virtualMachineSize":{"value": "[parameters('virtualMachineSize')]"},
               "ubuntuOSVersion":{"value": "[variables('ubuntuOSVersion')]"},
               "imagePublisher":{"value": "[variables('imagePublisher')]"},
               "imageOffer":{"value": "[variables('imageOffer')]"},
-              "subnetName":{"value": "[variables('subnet1Name')]"},
               "nicName":{"value": "[variables('nic2')]"},
               "adminUsername":{"value": "[parameters('adminUsername')]"},
-              "adminPasswordOrKey":{"value": "[parameters('adminPasswordOrKey')]"}
+              "adminPasswordOrKey":{"value": "[parameters('adminPassword')]"}
           }
       }
     }

@@ -1,0 +1,2 @@
+az group create --name "t3-test-rg" --location westeurope
+az group deployment create --name t3 --resource-group "t3-test-rg" --template-file azuredeploy.json --parameters azuredeploy.parameters.json
