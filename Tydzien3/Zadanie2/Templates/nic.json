@@ -34,6 +34,9 @@
       }
     }
   },
+  "variables":{
+    "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
+  },
   "resources": [
     {
       "name": "[parameters('nicName')]",
@@ -51,7 +54,7 @@
             "name": "ipconfig",
             "properties": {
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                "id": "[variables('subnetRef')]"
               },
               "privateIPAllocationMethod": "Dynamic"
             }

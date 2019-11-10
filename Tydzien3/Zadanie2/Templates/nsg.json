@@ -25,12 +25,12 @@
       "properties": {
         "securityRules": [
           {
-            "name": "default-allow-rdp",
+            "name": "AllowHttp",
             "properties": {
-              "priority": 1000,
+              "priority": 100,
               "sourceAddressPrefix": "*",
               "protocol": "Tcp",
-              "destinationPortRange": "3389",
+              "destinationPortRange": "80",
               "access": "Allow",
               "direction": "Inbound",
               "sourcePortRange": "*",
