@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "value": "adminuser"
+  },
+    "adminPassword": {
+      "reference": {
+        "keyVault": {
+            "id": "/subscriptions/<subscription_id>/resourceGroups/t3-test-rg/providers/Microsoft.KeyVault/vaults/t3-test-kv"
+        },
+        "secretName": "adminPassword"
+      }
+    },
+  "virtualMachineSize": {
+    "value": "Standard_DS1_v2"
+  },
+  "storageAccountType": {
+    "value": "Standard_LRS"
+  }
+}
+}

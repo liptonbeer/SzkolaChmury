@@ -1,0 +1,228 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualMachineSize": {
+      "type": "string",
+      "defaultValue": "Standard_DS1_v2",
+      "metadata": {
+        "description": "Virtual machine size (has to be at least the size of Standard_A3 to support 2 NICs)"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Default Admin username"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+      }
+    },
+    "storageAccountType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "metadata": {
+        "description": "Storage Account type for the VM and VM diagnostic storage"
+      },
+      "allowedValues": [
+        "Standard_LRS",
+        "Premium_LRS"
+      ]
+    }
+  },
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "virtualMachineName1": "t3-ubuntu-vm01",
+    "virtualMachineName2": "t3-ubuntu-vm02",
+    "nic1": "t3-ubuntu-vm01-nic01",
+    "nic2": "t3-ubuntu-vm02-nic02",
+    "virtualNetworkName": "t3-vnet",
+    "subnet1Name": "subnet1",
+    "subnet2Name": "subnet2",
+    "storageAccountName": "t3data01",
+    "networkSecurityGroupName1": "t3-subnet1-nsg",
+    "networkSecurityGroupName2": "t3-subnet2-nsg",
+    "imagePublisher": "Canonical",
+    "imageOffer": "UbuntuServer",
+    "ubuntuOSVersion": "18.04-LTS"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storageAccountName')]",
+      "apiVersion": "2019-04-01",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "[parameters('storageAccountType')]"
+      },
+      "kind": "Storage",
+      "properties": {}
+    },
+    {
+      "name": "[variables('networkSecurityGroupName1')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nsg.json"
+          },
+          "parameters": {
+              "location":{"value": "[variables('location')]"},
+              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName1')]"}
+          }
+      }
+    },
+    {
+      "name": "[variables('networkSecurityGroupName2')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nsg.json"
+          },
+          "parameters": {
+              "location":{"value": "[variables('location')]"},
+              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName2')]"}
+          }
+      }
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('virtualNetworkName')]",
+      "apiVersion": "2019-08-01",
+      "location": "[variables('location')]",
+      "comments": "This will build a Virtual Network.",
+      "dependsOn":[
+        "[variables('networkSecurityGroupName1')]",
+        "[variables('networkSecurityGroupName2')]"
+      ],
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('subnet1Name')]",
+            "properties": {
+              "addressPrefix": "10.0.0.0/24",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName1'))]"
+              }
+            }
+          },
+          {
+            "name": "[variables('subnet2Name')]",
+            "properties": {
+              "addressPrefix": "10.0.1.0/24",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName2'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('nic1')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[variables('virtualNetworkName')]"
+      ],
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nic.json"
+          },
+          "parameters": {
+              "location":{"value": "[variables('location')]"},
+              "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
+              "subnetName":{"value": "[variables('subnet1Name')]"},
+              "nicName":{"value": "[variables('nic1')]"}
+          }
+      }
+    },
+    {
+      "name": "[variables('virtualMachineName1')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[variables('nic1')]",
+        "[variables('storageAccountName')]"
+      ],
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/virtualMachine.json"
+          },
+          "parameters": {
+              "location":{"value": "[variables('location')]"},
+              "storageAccountName":{"value": "[variables('storageAccountName')]"},
+              "virtualMachineName":{"value": "[variables('virtualMachineName1')]"},
+              "virtualMachineSize":{"value": "[parameters('virtualMachineSize')]"},
+              "ubuntuOSVersion":{"value": "[variables('ubuntuOSVersion')]"},
+              "imagePublisher":{"value": "[variables('imagePublisher')]"},
+              "imageOffer":{"value": "[variables('imageOffer')]"},
+              "nicName":{"value": "[variables('nic1')]"},
+              "adminUsername":{"value": "[parameters('adminUsername')]"},
+              "adminPasswordOrKey":{"value": "[parameters('adminPassword')]"}
+          }
+      }
+    },
+    {
+      "name": "[variables('nic2')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[variables('virtualNetworkName')]"
+      ],
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/nic.json"
+          },
+          "parameters": {
+              "location":{"value": "[variables('location')]"},
+              "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
+              "subnetName":{"value": "[variables('subnet2Name')]"},
+              "nicName":{"value": "[variables('nic2')]"}
+          }
+      }
+    },
+    {
+      "name": "[variables('virtualMachineName2')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[variables('nic2')]",
+        "[variables('storageAccountName')]"
+      ],
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri":"https://raw.githubusercontent.com/liptonbeer/SzkolaChmury/master/Tydzien3/Zadanie2/Templates/virtualMachine.json"
+          },
+          "parameters": {
+              "location":{"value": "[variables('location')]"},
+              "storageAccountName":{"value": "[variables('storageAccountName')]"},
+              "virtualMachineName":{"value": "[variables('virtualMachineName2')]"},
+              "virtualMachineSize":{"value": "[parameters('virtualMachineSize')]"},
+              "ubuntuOSVersion":{"value": "[variables('ubuntuOSVersion')]"},
+              "imagePublisher":{"value": "[variables('imagePublisher')]"},
+              "imageOffer":{"value": "[variables('imageOffer')]"},
+              "nicName":{"value": "[variables('nic2')]"},
+              "adminUsername":{"value": "[parameters('adminUsername')]"},
+              "adminPasswordOrKey":{"value": "[parameters('adminPassword')]"}
+          }
+      }
+    }
+  ],
+  "outputs": {}
+}

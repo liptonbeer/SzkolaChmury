@@ -1,0 +1,16 @@
+$location="westeurope"
+$kvName="t3-test-kv"
+$rgName="t3-test-rg"
+
+az group create --name $rgName --location $location
+
+az keyvault create --name $kvName --resource-group $rgName
+
+az keyvault update -n $kvName -g $rgName --set properties.enabledForDeployment=true
+az keyvault update -n $kvName -g $rgName --set properties.enabledForTemplateDeployment=true
+
+$adminPasswordName="adminPassword"
+$adminPasswordSecret="SzkolaChmury3"
+az keyvault secret set --name $adminPasswordName --vault-name $kvName --value $adminPasswordSecret
+
+az group deployment create --name t3 --resource-group $rgName --template-file azuredeploy.json --parameters azuredeploy.parameters.json
