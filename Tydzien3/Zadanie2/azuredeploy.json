@@ -92,7 +92,7 @@
     {
       "name": "[variables('networkSecurityGroupName1')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
+      "apiVersion": "2015-01-01",
       "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -107,7 +107,7 @@
     {
       "name": "[variables('nic1')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
+      "apiVersion": "2015-01-01",
       "dependsOn":[
         "[variables('virtualNetworkName')]",
         "[variables('networkSecurityGroupName1')]"
@@ -129,7 +129,7 @@
     {
       "name": "[variables('virtualMachineName1')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
+      "apiVersion": "2015-01-01",
       "dependsOn":[
         "[variables('storageAccountName')]",
         "[variables('nic1')]"
@@ -156,7 +156,7 @@
     {
       "name": "[variables('networkSecurityGroupName2')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
+      "apiVersion": "2015-01-01",
       "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -171,7 +171,7 @@
     {
       "name": "[variables('nic2')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
+      "apiVersion": "2015-01-01",
       "dependsOn":[
         "[variables('virtualNetworkName')]",
         "[variables('networkSecurityGroupName2')]"
@@ -193,7 +193,7 @@
     {
       "name": "[variables('virtualMachineName2')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
+      "apiVersion": "2015-01-01",
       "dependsOn":[
         "[variables('storageAccountName')]",
         "[variables('nic2')]"
