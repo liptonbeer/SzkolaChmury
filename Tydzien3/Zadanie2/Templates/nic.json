@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    },
+    "networkSecurityGroupName":{
+      "type": "string",
+      "metadata": {
+      "description": "Network security group name for NIC."
+      }
+    },
+    "virtualNetworkName":{
+      "type": "string",
+      "metadata": {
+      "description": "Name of the virtual network."
+      }
+    },
+    "subnetName":{
+      "type": "string",
+      "metadata": {
+      "description": "Subnet name."
+      }
+    },
+    "nicName":{
+      "type": "string",
+      "metadata": {
+      "description": "NIC name."
+      }
+    }
+  },
+  "resources": [
+    {
+      "name": "[parameters('nicName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2019-09-01",
+      "location": "[parameters('location')]",
+      "comments": "This will be your Primary NIC",
+      "dependsOn": [
+        "[parameters('networkSecurityGroupName')]",
+        "[parameters('virtualNetworkName')]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+              },
+              "privateIPAllocationMethod": "Dynamic"
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+        }
+      }
+    }
+  ],
+  "outputs": {}
+}
