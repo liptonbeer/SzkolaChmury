@@ -38,9 +38,6 @@
       "apiVersion": "2019-09-01",
       "location": "[parameters('location')]",
       "comments": "This will be your Primary NIC",
-      "dependsOn": [
-        "[parameters('virtualNetworkName')]"
-      ],
       "properties": {
         "ipConfigurations": [
           {

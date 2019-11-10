@@ -79,10 +79,6 @@
       "apiVersion": "2019-03-01",
       "location": "[parameters('location')]",
       "comments": "This is the virtual machine that you're building.",
-      "dependsOn": [
-        "[parameters('nicName')]",
-        "[parameters('storageAccountName')]"
-      ],
       "properties": {
         "osProfile": {
           "computerName": "[parameters('virtualMachineName')]",
