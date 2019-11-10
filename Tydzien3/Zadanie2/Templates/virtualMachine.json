@@ -83,18 +83,7 @@
         "osProfile": {
           "computerName": "[parameters('virtualMachineName')]",
           "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPasswordOrKey')]",
-          "linuxConfiguration": {
-            "disablePasswordAuthentication": true,
-            "ssh": {
-              "publicKeys": [
-                {
-                  "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
-                  "keyData": "[parameters('adminPasswordOrKey')]"
-                }
-              ]
-            }
-          }
+          "adminPassword": "[parameters('adminPasswordOrKey')]"
         },
         "hardwareProfile": {
           "vmSize": "[parameters('virtualMachineSize')]"
@@ -107,6 +96,7 @@
             "version": "latest"
           },
           "osDisk": {
+            "name": "OSdisk01",
             "createOption": "FromImage"
           },
           "dataDisks": [
