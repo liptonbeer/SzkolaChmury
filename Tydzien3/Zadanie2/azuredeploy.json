@@ -108,6 +108,10 @@
       "name": "[variables('nic1')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
+      "dependsOn":[
+        "[variables('virtualNetworkName')]",
+        "[variables('networkSecurityGroupName1')]"
+      ],
       "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -126,6 +130,10 @@
       "name": "[variables('virtualMachineName1')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
+      "dependsOn":[
+        "[variables('storageAccountName')]",
+        "[variables('nic1')]"
+      ],
       "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -164,6 +172,10 @@
       "name": "[variables('nic2')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
+      "dependsOn":[
+        "[variables('virtualNetworkName')]",
+        "[variables('networkSecurityGroupName2')]"
+      ],
       "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -182,6 +194,10 @@
       "name": "[variables('virtualMachineName2')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
+      "dependsOn":[
+        "[variables('storageAccountName')]",
+        "[variables('nic2')]"
+      ],
       "properties": {
           "mode": "Incremental",
           "templateLink": {
