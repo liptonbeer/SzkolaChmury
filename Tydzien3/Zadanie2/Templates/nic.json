@@ -9,12 +9,6 @@
         "description": "Location for all resources."
       }
     },
-    "networkSecurityGroupName":{
-      "type": "string",
-      "metadata": {
-      "description": "Network security group name for NIC."
-      }
-    },
     "virtualNetworkName":{
       "type": "string",
       "metadata": {
@@ -45,7 +39,6 @@
       "location": "[parameters('location')]",
       "comments": "This will be your Primary NIC",
       "dependsOn": [
-        "[parameters('networkSecurityGroupName')]",
         "[parameters('virtualNetworkName')]"
       ],
       "properties": {
@@ -59,10 +52,7 @@
               "privateIPAllocationMethod": "Dynamic"
             }
           }
-        ],
-        "networkSecurityGroup": {
-          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
-        }
+        ]
       }
     }
   ],

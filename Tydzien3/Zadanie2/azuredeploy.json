@@ -97,6 +97,10 @@
       "apiVersion": "2019-08-01",
       "location": "[variables('location')]",
       "comments": "This will build a Virtual Network.",
+      "dependsOn":[
+        "[variables('networkSecurityGroupName1')]",
+        "[variables('networkSecurityGroupName2')]"
+      ],
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
@@ -130,8 +134,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn":[
-        "[variables('virtualNetworkName')]",
-        "[variables('networkSecurityGroupName1')]"
+        "[variables('virtualNetworkName')]"
       ],
       "properties": {
           "mode": "Incremental",
@@ -141,7 +144,6 @@
           "parameters": {
               "location":{"value": "[variables('location')]"},
               "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
-              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName1')]"},
               "subnetName":{"value": "[variables('subnet1Name')]"},
               "nicName":{"value": "[variables('nic1')]"}
           }
@@ -179,8 +181,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn":[
-        "[variables('virtualNetworkName')]",
-        "[variables('networkSecurityGroupName2')]"
+        "[variables('virtualNetworkName')]"
       ],
       "properties": {
           "mode": "Incremental",
@@ -190,7 +191,6 @@
           "parameters": {
               "location":{"value": "[variables('location')]"},
               "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
-              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName2')]"},
               "subnetName":{"value": "[variables('subnet2Name')]"},
               "nicName":{"value": "[variables('nic2')]"}
           }
