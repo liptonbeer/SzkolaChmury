@@ -41,15 +41,16 @@
     }
   },
   "variables": {
-    "virtualMachineName1": "VM-MultiNic1",
-    "virtualMachineName2": "VM-MultiNic2",
-    "nic1": "nic-1",
-    "nic2": "nic-2",
-    "virtualNetworkName": "virtualNetwork",
-    "subnet1Name": "subnet-1",
-    "subnet2Name": "subnet-2",
+    "virtualMachineName1": "t3-ubuntu-vm01",
+    "virtualMachineName2": "t3-ubuntu-vm02",
+    "nic1": "t3-ubuntu-vm01-nic01",
+    "nic2": "t3-ubuntu-vm02-nic02",
+    "virtualNetworkName": "t3-vnet",
+    "subnet1Name": "subnet1",
+    "subnet2Name": "subnet2",
     "storageAccountName": "[concat('diags',uniqueString(resourceGroup().id))]",
-    "networkSecurityGroupName": "NSG",
+    "networkSecurityGroupName1": "t3-subnet1-nsg",
+    "networkSecurityGroupName2": "t3-subnet2-nsg",
     "imagePublisher": "Canonical",
     "imageOffer": "UbuntuServer",
     "ubuntuOSVersion": "18.04-LTS"
@@ -95,31 +96,22 @@
       }
     },
     {
-      "name": "[variables('networkSecurityGroupName')]",
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2019-09-01",
-      "location": "[parameters('location')]",
-      "comments": "Network Security Group (NSG) for your Primary NIC",
+      "name": "[variables('networkSecurityGroupName1')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
       "properties": {
-        "securityRules": [
-          {
-            "name": "default-allow-rdp",
-            "properties": {
-              "priority": 1000,
-              "sourceAddressPrefix": "*",
-              "protocol": "Tcp",
-              "destinationPortRange": "3389",
-              "access": "Allow",
-              "direction": "Inbound",
-              "sourcePortRange": "*",
-              "destinationAddressPrefix": "*"
-            }
+          "mode": "Incremental",
+          "templateLink": {
+              "uri":"https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/tutorial-linked-templates/linkedStorageAccount.json"
+          },
+          "parameters": {
+              "location":{"value": "[parameters('location')]"},
+              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName1')]"}
           }
-        ]
       }
     },
     {
-      "name": "nic1",
+      "name": "[variables('nic1')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "properties": {
@@ -130,14 +122,14 @@
           "parameters": {
               "location":{"value": "[parameters('location')]"},
               "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
-              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName')]"},
+              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName1')]"},
               "subnetName":{"value": "[variables('subnet1Name')]"},
               "nicName":{"value": "[variables('nic1')]"}
           }
       }
     },
     {
-      "name": "virtualMachine1",
+      "name": "[variables('virtualMachineName1')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "properties": {
@@ -149,7 +141,7 @@
               "location":{"value": "[parameters('location')]"},
               "storageAccountName":{"value": "[variables('storageAccountName')]"},
               "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
-              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName')]"},
+              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName1')]"},
               "virtualMachineName":{"value": "[variables('virtualMachineName1')]"},
               "virtualMachineSize":{"value": "[parameters('virtualMachineSize')]"},
               "ubuntuOSVersion":{"value": "[variables('ubuntuOSVersion')]"},
@@ -163,7 +155,22 @@
       }
     },
     {
-      "name": "nic2",
+      "name": "[variables('networkSecurityGroupName2')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri":"https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/tutorial-linked-templates/linkedStorageAccount.json"
+          },
+          "parameters": {
+              "location":{"value": "[parameters('location')]"},
+              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName2')]"}
+          }
+      }
+    },
+    {
+      "name": "[variables('nic2')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "properties": {
@@ -174,14 +181,14 @@
           "parameters": {
               "location":{"value": "[parameters('location')]"},
               "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
-              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName')]"},
+              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName2')]"},
               "subnetName":{"value": "[variables('subnet1Name')]"},
               "nicName":{"value": "[variables('nic1')]"}
           }
       }
     },
     {
-      "name": "virtualMachine2",
+      "name": "[variables('virtualMachineName2')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2017-05-10",
       "properties": {
@@ -193,7 +200,7 @@
               "location":{"value": "[parameters('location')]"},
               "storageAccountName":{"value": "[variables('storageAccountName')]"},
               "virtualNetworkName":{"value": "[variables('virtualNetworkName')]"},
-              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName')]"},
+              "networkSecurityGroupName":{"value": "[variables('networkSecurityGroupName2')]"},
               "virtualMachineName":{"value": "[variables('virtualMachineName2')]"},
               "virtualMachineSize":{"value": "[parameters('virtualMachineSize')]"},
               "ubuntuOSVersion":{"value": "[variables('ubuntuOSVersion')]"},
