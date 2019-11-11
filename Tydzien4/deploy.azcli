@@ -1,0 +1,10 @@
+$location="westeurope"
+$rgName="t4-test-rg"
+$vmssName="t4-vmss"
+$adminName="adminuser"
+
+az group create --name $rgName --location $location
+
+az vmss create --resource-group $rgName --name $vmssName --image UbuntuLTS --upgrade-policy-mode automatic --admin-username $adminName --generate-ssh-keys
+
+az group delete --name $rgName --yes --no-wait
